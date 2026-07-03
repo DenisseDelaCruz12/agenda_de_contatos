@@ -70,14 +70,26 @@ export default function ContactCard({ contacto, onActualizar }) {
 
     }
 
-    async function borrarContacto() {
+    async function eliminar() {
+
+        const confirmar = window.confirm(
+            `¿Está seguro de que desea eliminar a ${contacto.nombre} ${contacto.apellido}?`
+        );
+
+        if (!confirmar) {
+            return;
+        }
 
         try {
+
             await eliminarContacto(contacto._id);
+
             await onActualizar();
 
         } catch (error) {
+
             console.error(error);
+
         }
 
     }
@@ -123,6 +135,97 @@ export default function ContactCard({ contacto, onActualizar }) {
         }
     }
 
+    function imprimirContacto() {
+
+        const ventana = window.open("", "_blank");
+
+        ventana.document.write(`
+        <html>
+
+        <head>
+
+            <title>Reporte del contacto</title>
+
+            <style>
+
+                body{
+                    font-family: Arial;
+                    padding:40px;
+                }
+
+                h1{
+                    text-align:center;
+                }
+
+                hr{
+                    margin:20px 0;
+                }
+
+            </style>
+
+        </head>
+
+        <body>
+
+            <h1>Reporte del contacto</h1>
+
+            <hr>
+
+            <p><strong>Nombre:</strong> ${contacto.nombre} ${contacto.apellido}</p>
+
+            <p><strong>Correo:</strong> ${contacto.correo}</p>
+
+            <p><strong>Cédula:</strong> ${contacto.cedula}</p>
+
+            <p><strong>Tipo de sangre:</strong> ${contacto.tipoSangre}</p>
+
+            <p><strong>Fecha nacimiento:</strong>
+                ${new Date(contacto.fechaNacimiento).toLocaleDateString()}
+            </p>
+
+            <hr>
+
+            <h2>Historial de llamadas</h2>
+
+            ${contacto.llamadas.length === 0
+
+                ?
+
+                "<p>Este contacto no posee llamadas registradas.</p>"
+
+                :
+
+                contacto.llamadas.map((llamada, index) => `
+
+                    <h4>Llamada ${index + 1}</h4>
+
+                    <p><strong>Fecha:</strong>
+                    ${new Date(llamada.fecha).toLocaleDateString()}</p>
+
+                    <p><strong>Persona:</strong>
+                    ${llamada.persona}</p>
+
+                    <p><strong>Motivo:</strong>
+                    ${llamada.motivo}</p>
+
+                    <hr>
+
+                `).join("")
+            }
+
+            <h3>Total de llamadas: ${contacto.llamadas.length}</h3>
+
+        </body>
+
+        </html>
+    `);
+
+        ventana.document.close();
+
+        ventana.print();
+
+    }
+
     return (
 
         <div className="contact-card">
@@ -142,7 +245,7 @@ export default function ContactCard({ contacto, onActualizar }) {
                                 </button>
                                 <button
                                     className="btn-icon-only btn-delete"
-                                    onClick={borrarContacto}
+                                    onClick={eliminar}
                                     title="Eliminar contacto"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
@@ -196,12 +299,20 @@ export default function ContactCard({ contacto, onActualizar }) {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path><line x1="12" y1="7" x2="12" y2="13"></line><line x1="9" y1="10" x2="15" y2="10"></line></svg>
                                     Llamar
                                 </button>
+
+                                <button
+                                    className="btn-pastel-tertiary flex-fill"
+                                    onClick={imprimirContacto}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect><circle cx="18" cy="12" r="1"></circle></svg>{" "}
+                                    Imprimir
+                                </button>
+
                             </div>
                         </>
                     )
                     :
                     (
-                        /* Edición del contacto (Formulario inline limpio) */
                         <div className="d-flex flex-column h-100 justify-content-between">
                             <h4 className="mb-3 font-semibold">Editar Contacto</h4>
                             <div className="d-flex flex-column gap-2 mb-3">
@@ -307,8 +418,8 @@ export default function ContactCard({ contacto, onActualizar }) {
 
             {/* MODAL: Nueva llamada — renderizado via Portal en document.body */}
             {mostrarFormularioLlamada && ReactDOM.createPortal(
-                <div 
-                    className="modal fade show" 
+                <div
+                    className="modal fade show"
                     style={{ display: 'block', backgroundColor: 'rgba(15, 23, 42, 0.45)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', zIndex: 1055, position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}
                     onClick={() => setMostrarFormularioLlamada(false)}
                 >
@@ -319,16 +430,16 @@ export default function ContactCard({ contacto, onActualizar }) {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                                     Registrar Llamada
                                 </h5>
-                                <button 
-                                    type="button" 
-                                    className="btn-close" 
+                                <button
+                                    type="button"
+                                    className="btn-close"
                                     onClick={() => setMostrarFormularioLlamada(false)}
                                     aria-label="Cerrar"
                                 ></button>
                             </div>
                             <div className="modal-body py-3">
                                 <p className="text-secondary small mb-3">Registra una nueva llamada realizada a {contacto.nombre}.</p>
-                                
+
                                 <div className="mb-3">
                                     <label className="form-label">Fecha de llamada</label>
                                     <input
@@ -346,7 +457,7 @@ export default function ContactCard({ contacto, onActualizar }) {
                                     <input
                                         className="form-control"
                                         name="persona"
-                                        placeholder="Nombre del operador"
+                                        placeholder="Nombre de quien llama"
                                         value={llamada.persona}
                                         onChange={cambiosLlamada}
                                         required
@@ -390,8 +501,8 @@ export default function ContactCard({ contacto, onActualizar }) {
 
             {/* MODAL: Ver llamadas — renderizado via Portal en document.body */}
             {mostrarLlamadas && ReactDOM.createPortal(
-                <div 
-                    className="modal fade show" 
+                <div
+                    className="modal fade show"
                     style={{ display: 'block', backgroundColor: 'rgba(15, 23, 42, 0.45)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', zIndex: 1055, position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}
                     onClick={() => setMostrarLlamadas(false)}
                 >
@@ -402,9 +513,9 @@ export default function ContactCard({ contacto, onActualizar }) {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                                     Historial de Llamadas
                                 </h5>
-                                <button 
-                                    type="button" 
-                                    className="btn-close" 
+                                <button
+                                    type="button"
+                                    className="btn-close"
                                     onClick={() => setMostrarLlamadas(false)}
                                     aria-label="Cerrar"
                                 ></button>
@@ -412,7 +523,7 @@ export default function ContactCard({ contacto, onActualizar }) {
                             <div className="modal-body py-3">
                                 <p className="text-secondary small mb-3">Registro de comunicaciones con {contacto.nombre} {contacto.apellido}.</p>
 
-                                <div className="modal-body-scroll" style={{maxHeight: '300px', overflowY: 'auto', paddingRight: '4px'}}>
+                                <div className="modal-body-scroll" style={{ maxHeight: '300px', overflowY: 'auto', paddingRight: '4px' }}>
                                     {contacto.llamadas.length === 0 ? (
                                         <div className="text-center py-4">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-muted mb-2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
@@ -496,7 +607,7 @@ export default function ContactCard({ contacto, onActualizar }) {
                                                                 <strong>Fecha:</strong> {new Date(item.fecha).toLocaleDateString()}
                                                             </span>
                                                             <span>
-                                                                <strong>Operador:</strong> {item.persona}
+                                                                <strong>Quien llama:</strong> {item.persona}
                                                             </span>
                                                         </div>
                                                         <div className="call-reason">
