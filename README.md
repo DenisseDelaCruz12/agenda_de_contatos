@@ -19,7 +19,7 @@ Para que el proyecto funcione correctamente, debes ejecutar **backend y frontend
 ---
 ✨ FUNCIONALIDADES
 
-📌 Contactos
+📌 Contactos:
 Crear contactos
 Listar contactos
 Editar contactos
@@ -44,10 +44,10 @@ Asegúrate de tener CORS habilitado en el backend.
 
 ---
 
-🧑‍💻 TECNOLOGÍAS USADAS
-React
-Node.js
-Express
-MongoDB
-Mongoose
-Bootstrap
+🧑‍💻 TECNOLOGÍAS USADAS:
+React |
+ Node.js |
+ Express |
+ MongoDB |
+ Mongoose |
+ Bootstrap |
