@@ -20,27 +20,27 @@ Para que el proyecto funcione correctamente, debes ejecutar **backend y frontend
 ✨ FUNCIONALIDADES
 
 📌 Contactos:
-Crear contactos
-Listar contactos
-Editar contactos
-Eliminar contactos
+Crear contactos,
+ Listar contactos,
+ Editar contactos,
+ Eliminar contactos
 
-📌 Llamadas
-Agregar llamadas a un contacto
-Editar llamadas
-Eliminar llamadas
-Ver historial de llamadas por contacto
+📌 Llamadas:
+Agregar llamadas a un contacto,
+ Editar llamadas,
+ Eliminar llamadas,
+ Ver historial de llamadas por contacto
 
-📌 Extras
-Impresión de contacto con historial de llamadas
-Modal de confirmación para eliminar
-Interfaz tipo CRM
+📌 Extras:
+Impresión de contacto con historial de llamadas,
+ Modal de confirmación para eliminar,
+ Interfaz tipo CRM
 
-⚠️ NOTAS IMPORTANTES
+⚠️ NOTAS IMPORTANTES:
 El backend debe estar corriendo antes de abrir el frontend.
-Ambos servidores deben ejecutarse al mismo tiempo.
-Si el backend no está activo, el frontend no mostrará datos.
-Asegúrate de tener CORS habilitado en el backend.
+ Ambos servidores deben ejecutarse al mismo tiempo.
+ Si el backend no está activo, el frontend no mostrará datos.
+ Asegúrate de tener CORS habilitado en el backend.
 
 ---
 
