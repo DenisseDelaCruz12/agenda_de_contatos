@@ -5,7 +5,8 @@ import {
     editarContacto, 
     eliminarContacto,
     agregarLlamada,
-    editarLlamada 
+    editarLlamada,
+    eliminarLlamada
 } from '../controllers/contactoController.js'
 
 
@@ -26,6 +27,8 @@ router.delete('/:id', eliminarContacto);
 router.post("/:id/llamadas", agregarLlamada);
 
 router.put("/:id/llamadas/:llamadaId", editarLlamada);
+
+router.delete("/:id/llamadas/:llamadaId", eliminarLlamada);
 
 
 

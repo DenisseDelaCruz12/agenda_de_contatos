@@ -152,3 +152,20 @@ export async function editarLlamada(id, llamadaId, data) {
 
     return await response.json();
 }
+
+export async function eliminarLlamada(id, llamadaId) {
+    try {
+        const response = await fetch(`${url}/${id}/llamadas/${llamadaId}`, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

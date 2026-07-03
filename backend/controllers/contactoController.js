@@ -228,4 +228,33 @@ export const editarLlamada = async (req, res) => {
     }
 };
 
+export const eliminarLlamada = async (req, res) => {
+    const { id, llamadaId } = req.params;
+
+    try {
+        const contacto = await Contacto.findById(id);
+
+        if (!contacto) {
+            return res.status(404).json({
+                message: "Contacto no encontrado"
+            });
+        }
+
+        // Remove the subdocument from the array
+        contacto.llamadas.pull(llamadaId);
+        await contacto.save();
+
+        return res.status(200).json({
+            message: "Llamada eliminada correctamente",
+            contacto
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Error eliminando llamada"
+        });
+    }
+};
+
+
 
